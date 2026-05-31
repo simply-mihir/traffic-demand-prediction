@@ -1,0 +1,7 @@
+pandas>=1.5
+numpy>=1.23
+scikit-learn>=1.2
+lightgbm>=3.3
+xgboost>=1.7
+catboost>=1.2
+jupyter

@@ -1,0 +1,20 @@
+# data (do not commit competition data)
+data/*.csv
+!data/.gitkeep
+
+# outputs
+submission*.csv
+*.pkl
+
+# python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+
+# os / editor
+.DS_Store
+.idea/
+.vscode/
