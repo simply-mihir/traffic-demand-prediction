@@ -10,7 +10,7 @@
 [![XGBoost](https://img.shields.io/badge/XGBoost-gradient%20boosting-EB0F00)](https://xgboost.readthedocs.io/)
 [![CatBoost](https://img.shields.io/badge/CatBoost-gradient%20boosting-FFCC00)](https://catboost.ai/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
-[![CI](https://github.com/<your-username>/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg)](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml)
+[![CI](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 *Predicting travel demand to help understand urban traffic patterns and alleviate congestion.*

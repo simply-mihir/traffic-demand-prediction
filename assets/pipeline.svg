@@ -1,79 +1,106 @@
-<svg viewBox="0 0 920 360" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,Segoe UI,Roboto,sans-serif">
+<svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,-apple-system,Segoe UI,Roboto,sans-serif">
   <defs>
-    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1f6feb"/><stop offset="1" stop-color="#1158c7"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1117"/><stop offset="1" stop-color="#0a0e14"/>
     </linearGradient>
-    <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#2da44e"/><stop offset="1" stop-color="#1a7f37"/>
-    </linearGradient>
-    <linearGradient id="g3" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#8250df"/><stop offset="1" stop-color="#6639ba"/>
-    </linearGradient>
-    <marker id="arr" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-      <path d="M0,0 L7,3 L0,6 Z" fill="#8b949e"/>
-    </marker>
+    <linearGradient id="s1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#388bfd"/><stop offset="1" stop-color="#1f6feb"/></linearGradient>
+    <linearGradient id="s2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fb950"/><stop offset="1" stop-color="#2da44e"/></linearGradient>
+    <linearGradient id="s3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a371f7"/><stop offset="1" stop-color="#8250df"/></linearGradient>
+    <linearGradient id="s4" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0883e"/><stop offset="1" stop-color="#db6d28"/></linearGradient>
+    <linearGradient id="flow" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#388bfd"/><stop offset="0.5" stop-color="#a371f7"/><stop offset="1" stop-color="#3fb950"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="ar" markerWidth="12" markerHeight="12" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#6e7681"/></marker>
   </defs>
-  <rect width="920" height="360" fill="#0d1117"/>
-  <text x="460" y="36" fill="#e6edf3" font-size="20" font-weight="700" text-anchor="middle">Traffic Demand Prediction — Pipeline</text>
+  <rect width="960" height="420" fill="url(#bg)"/>
+  <rect x="0" y="0" width="960" height="420" fill="none"/>
 
-  <!-- Stage 1: Data -->
-  <rect x="30" y="70" width="170" height="210" rx="12" fill="#161b22" stroke="#30363d"/>
-  <text x="115" y="96" fill="#58a6ff" font-size="14" font-weight="700" text-anchor="middle">1 · Raw Data</text>
-  <text x="115" y="124" fill="#c9d1d9" font-size="11" text-anchor="middle">train.csv (77,299)</text>
-  <text x="115" y="144" fill="#c9d1d9" font-size="11" text-anchor="middle">test.csv (41,778)</text>
-  <line x1="48" y1="158" x2="182" y2="158" stroke="#30363d"/>
-  <text x="115" y="180" fill="#8b949e" font-size="10.5" text-anchor="middle">geohash · day</text>
-  <text x="115" y="197" fill="#8b949e" font-size="10.5" text-anchor="middle">timestamp · demand</text>
-  <text x="115" y="214" fill="#8b949e" font-size="10.5" text-anchor="middle">RoadType · Weather</text>
-  <text x="115" y="231" fill="#8b949e" font-size="10.5" text-anchor="middle">Temperature · Lanes</text>
-  <text x="115" y="258" fill="#6e7681" font-size="10" text-anchor="middle" font-style="italic">spatio-temporal</text>
-  <text x="115" y="272" fill="#6e7681" font-size="10" text-anchor="middle" font-style="italic">15-min series</text>
+  <!-- title -->
+  <text x="40" y="46" fill="#e6edf3" font-size="22" font-weight="800" letter-spacing="-0.3">Traffic Demand Prediction</text>
+  <text x="40" y="68" fill="#7d8590" font-size="13" font-weight="500">Spatio-temporal forecasting pipeline · 15-minute geohash grid</text>
+  <line x1="40" y1="84" x2="920" y2="84" stroke="#21262d" stroke-width="1"/>
 
-  <!-- Stage 2: Features -->
-  <rect x="245" y="70" width="200" height="210" rx="12" fill="#161b22" stroke="#30363d"/>
-  <rect x="245" y="70" width="200" height="30" rx="12" fill="url(#g1)"/>
-  <text x="345" y="90" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">2 · Feature Engineering</text>
-  <text x="262" y="122" fill="#c9d1d9" font-size="11">◆ geohash → lat/lon</text>
-  <text x="262" y="142" fill="#c9d1d9" font-size="11">◆ cyclical time (sin/cos)</text>
-  <text x="262" y="162" fill="#c9d1d9" font-size="11">◆ K-fold target encoding</text>
-  <text x="278" y="179" fill="#8b949e" font-size="10">geohash × time profiles</text>
-  <text x="262" y="199" fill="#c9d1d9" font-size="11">◆ day-48 demand profile</text>
-  <text x="262" y="219" fill="#c9d1d9" font-size="11">◆ K-means geo-clusters</text>
-  <text x="262" y="239" fill="#c9d1d9" font-size="11">◆ context attributes</text>
-  <text x="262" y="263" fill="#6e7681" font-size="10" font-style="italic">leak-free · train+test joint</text>
+  <!-- connecting flow line behind cards -->
+  <line x1="180" y1="250" x2="800" y2="250" stroke="url(#flow)" stroke-width="2.5" opacity="0.35"/>
 
-  <!-- Stage 3: Models -->
-  <rect x="490" y="70" width="200" height="210" rx="12" fill="#161b22" stroke="#30363d"/>
-  <rect x="490" y="70" width="200" height="30" rx="12" fill="url(#g3)"/>
-  <text x="590" y="90" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">3 · Stacked Ensemble</text>
-  <rect x="506" y="112" width="168" height="22" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="590" y="127" fill="#c9d1d9" font-size="11" text-anchor="middle">LightGBM</text>
-  <rect x="506" y="138" width="168" height="22" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="590" y="153" fill="#c9d1d9" font-size="11" text-anchor="middle">XGBoost</text>
-  <rect x="506" y="164" width="168" height="22" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="590" y="179" fill="#c9d1d9" font-size="11" text-anchor="middle">CatBoost</text>
-  <rect x="506" y="190" width="80" height="22" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="546" y="205" fill="#c9d1d9" font-size="11" text-anchor="middle">HGBR</text>
-  <rect x="594" y="190" width="80" height="22" rx="6" fill="#21262d" stroke="#30363d"/>
-  <text x="634" y="205" fill="#c9d1d9" font-size="11" text-anchor="middle">ExtraTrees</text>
-  <rect x="506" y="224" width="168" height="40" rx="6" fill="url(#g3)" opacity="0.25" stroke="#8250df"/>
-  <text x="590" y="240" fill="#d2a8ff" font-size="11" font-weight="700" text-anchor="middle">Ridge meta-learner</text>
-  <text x="590" y="256" fill="#8b949e" font-size="10" text-anchor="middle">out-of-fold stacking</text>
+  <!-- ===== Card 1: Data ===== -->
+  <g>
+    <rect x="40" y="110" width="190" height="280" rx="16" fill="#11161d" stroke="#1f6feb" stroke-width="1.5" opacity="0.95"/>
+    <circle cx="70" cy="148" r="16" fill="url(#s1)"/>
+    <text x="70" y="153" fill="#fff" font-size="15" font-weight="800" text-anchor="middle">1</text>
+    <text x="98" y="146" fill="#58a6ff" font-size="14" font-weight="700">Raw Data</text>
+    <text x="98" y="162" fill="#6e7681" font-size="10">spatio-temporal series</text>
+    <line x1="58" y1="178" x2="212" y2="178" stroke="#21262d"/>
+    <text x="58" y="202" fill="#c9d1d9" font-size="11.5" font-weight="600">train.csv</text>
+    <text x="212" y="202" fill="#7d8590" font-size="11" text-anchor="end">77,299</text>
+    <text x="58" y="222" fill="#c9d1d9" font-size="11.5" font-weight="600">test.csv</text>
+    <text x="212" y="222" fill="#7d8590" font-size="11" text-anchor="end">41,778</text>
+    <line x1="58" y1="238" x2="212" y2="238" stroke="#21262d"/>
+    <text x="58" y="262" fill="#8b949e" font-size="10.5">▪ geohash → location</text>
+    <text x="58" y="282" fill="#8b949e" font-size="10.5">▪ day · timestamp</text>
+    <text x="58" y="302" fill="#8b949e" font-size="10.5">▪ road · weather</text>
+    <text x="58" y="322" fill="#8b949e" font-size="10.5">▪ temperature · lanes</text>
+    <rect x="58" y="338" width="154" height="34" rx="8" fill="#0d1117" stroke="#1f6feb" stroke-opacity="0.3"/>
+    <text x="135" y="359" fill="#58a6ff" font-size="11" font-weight="600" text-anchor="middle">demand ∈ [0, 1]</text>
+  </g>
 
-  <!-- Stage 4: Output -->
-  <rect x="735" y="70" width="155" height="210" rx="12" fill="#161b22" stroke="#30363d"/>
-  <rect x="735" y="70" width="155" height="30" rx="12" fill="url(#g2)"/>
-  <text x="812" y="90" fill="#fff" font-size="14" font-weight="700" text-anchor="middle">4 · Output</text>
-  <text x="812" y="126" fill="#c9d1d9" font-size="11" text-anchor="middle">log-space training</text>
-  <text x="812" y="148" fill="#c9d1d9" font-size="11" text-anchor="middle">clip to [0, 1]</text>
-  <text x="812" y="170" fill="#c9d1d9" font-size="11" text-anchor="middle">3 seeds × 5 folds</text>
-  <line x1="752" y1="184" x2="872" y2="184" stroke="#30363d"/>
-  <text x="812" y="208" fill="#3fb950" font-size="12" font-weight="700" text-anchor="middle">submission.csv</text>
-  <text x="812" y="226" fill="#8b949e" font-size="10.5" text-anchor="middle">41,778 × 2</text>
-  <text x="812" y="252" fill="#8b949e" font-size="10.5" text-anchor="middle">Index, demand</text>
+  <!-- ===== Card 2: Features ===== -->
+  <g>
+    <rect x="255" y="110" width="190" height="280" rx="16" fill="#11161d" stroke="#388bfd" stroke-width="1.5"/>
+    <circle cx="285" cy="148" r="16" fill="url(#s1)"/>
+    <text x="285" y="153" fill="#fff" font-size="15" font-weight="800" text-anchor="middle">2</text>
+    <text x="313" y="146" fill="#58a6ff" font-size="14" font-weight="700">Features</text>
+    <text x="313" y="162" fill="#6e7681" font-size="10">leak-free · joint fit</text>
+    <line x1="273" y1="178" x2="427" y2="178" stroke="#21262d"/>
+    <text x="273" y="201" fill="#c9d1d9" font-size="11">◆ geohash → lat / lon</text>
+    <text x="273" y="223" fill="#c9d1d9" font-size="11">◆ cyclical time (sin/cos)</text>
+    <text x="273" y="245" fill="#c9d1d9" font-size="11">◆ K-fold target encoding</text>
+    <text x="289" y="261" fill="#6e7681" font-size="9.5">geohash × time profiles</text>
+    <text x="273" y="283" fill="#c9d1d9" font-size="11">◆ day-48 demand profile</text>
+    <text x="273" y="305" fill="#c9d1d9" font-size="11">◆ K-means geo-clusters</text>
+    <text x="273" y="327" fill="#c9d1d9" font-size="11">◆ spatial-neighbour lift</text>
+    <text x="273" y="349" fill="#c9d1d9" font-size="11">◆ context attributes</text>
+  </g>
 
-  <!-- arrows -->
-  <line x1="200" y1="175" x2="243" y2="175" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
-  <line x1="445" y1="175" x2="488" y2="175" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
-  <line x1="690" y1="175" x2="733" y2="175" stroke="#8b949e" stroke-width="2" marker-end="url(#arr)"/>
+  <!-- ===== Card 3: Ensemble ===== -->
+  <g>
+    <rect x="470" y="110" width="200" height="280" rx="16" fill="#11161d" stroke="#a371f7" stroke-width="1.5" filter="url(#glow)"/>
+    <circle cx="500" cy="148" r="16" fill="url(#s3)"/>
+    <text x="500" y="153" fill="#fff" font-size="15" font-weight="800" text-anchor="middle">3</text>
+    <text x="528" y="146" fill="#d2a8ff" font-size="14" font-weight="700">Stacked Ensemble</text>
+    <text x="528" y="162" fill="#6e7681" font-size="10">out-of-fold stacking</text>
+    <line x1="488" y1="178" x2="652" y2="178" stroke="#21262d"/>
+    <rect x="488" y="190" width="164" height="24" rx="6" fill="#161b22" stroke="#30363d"/><text x="570" y="206" fill="#c9d1d9" font-size="11" text-anchor="middle" font-weight="600">LightGBM</text>
+    <rect x="488" y="218" width="164" height="24" rx="6" fill="#161b22" stroke="#30363d"/><text x="570" y="234" fill="#c9d1d9" font-size="11" text-anchor="middle" font-weight="600">XGBoost</text>
+    <rect x="488" y="246" width="164" height="24" rx="6" fill="#161b22" stroke="#30363d"/><text x="570" y="262" fill="#c9d1d9" font-size="11" text-anchor="middle" font-weight="600">CatBoost</text>
+    <rect x="488" y="274" width="79" height="24" rx="6" fill="#161b22" stroke="#30363d"/><text x="527" y="290" fill="#c9d1d9" font-size="10.5" text-anchor="middle" font-weight="600">HGBR</text>
+    <rect x="573" y="274" width="79" height="24" rx="6" fill="#161b22" stroke="#30363d"/><text x="612" y="290" fill="#c9d1d9" font-size="10.5" text-anchor="middle" font-weight="600">ExtraTrees</text>
+    <path d="M570 302 L570 312 M530 302 L530 308 L610 308 L610 302 M610 308 L610 312" stroke="#6e7681" stroke-width="1.2" fill="none"/>
+    <rect x="488" y="316" width="164" height="56" rx="10" fill="#1c1430" stroke="#a371f7" stroke-width="1.5"/>
+    <text x="570" y="338" fill="#d2a8ff" font-size="12" font-weight="800" text-anchor="middle">Ridge meta-learner</text>
+    <text x="570" y="356" fill="#8b949e" font-size="9.5" text-anchor="middle">combines OOF predictions</text>
+  </g>
+
+  <!-- ===== Card 4: Output ===== -->
+  <g>
+    <rect x="695" y="110" width="190" height="280" rx="16" fill="#11161d" stroke="#3fb950" stroke-width="1.5"/>
+    <circle cx="725" cy="148" r="16" fill="url(#s2)"/>
+    <text x="725" y="153" fill="#fff" font-size="15" font-weight="800" text-anchor="middle">4</text>
+    <text x="753" y="146" fill="#3fb950" font-size="14" font-weight="700">Output</text>
+    <text x="753" y="162" fill="#6e7681" font-size="10">post-processing</text>
+    <line x1="713" y1="178" x2="867" y2="178" stroke="#21262d"/>
+    <text x="713" y="204" fill="#c9d1d9" font-size="11">▪ log-space training</text>
+    <text x="713" y="226" fill="#c9d1d9" font-size="11">▪ clip to [0, 1]</text>
+    <text x="713" y="248" fill="#c9d1d9" font-size="11">▪ 3 seeds × 5 folds</text>
+    <line x1="713" y1="266" x2="867" y2="266" stroke="#21262d"/>
+    <rect x="713" y="282" width="154" height="44" rx="10" fill="#0f2417" stroke="#3fb950" stroke-width="1.5"/>
+    <text x="790" y="303" fill="#3fb950" font-size="13" font-weight="800" text-anchor="middle">submission.csv</text>
+    <text x="790" y="319" fill="#7d8590" font-size="10" text-anchor="middle">41,778 × 2</text>
+    <rect x="713" y="334" width="154" height="30" rx="8" fill="#0d1117" stroke="#30363d"/>
+    <text x="790" y="354" fill="#d2a8ff" font-size="12" font-weight="700" text-anchor="middle">R² ≈ 0.91</text>
+  </g>
+
+  <!-- arrows between cards -->
+  <line x1="232" y1="250" x2="251" y2="250" stroke="#6e7681" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="447" y1="250" x2="466" y2="250" stroke="#6e7681" stroke-width="2" marker-end="url(#ar)"/>
+  <line x1="672" y1="250" x2="691" y2="250" stroke="#6e7681" stroke-width="2" marker-end="url(#ar)"/>
 </svg>
