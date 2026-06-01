@@ -10,7 +10,7 @@
 [![XGBoost](https://img.shields.io/badge/XGBoost-gradient%20boosting-EB0F00)](https://xgboost.readthedocs.io/)
 [![CatBoost](https://img.shields.io/badge/CatBoost-gradient%20boosting-FFCC00)](https://catboost.ai/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
-[![CI](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml)
+[![CI](https://github.com/Prateek Raushan/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg)](https://github.com/Prateek Raushan/traffic-demand-prediction/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 *Predicting travel demand to help understand urban traffic patterns and alleviate congestion.*
@@ -29,7 +29,7 @@ The data is a **spatio-temporal time series**, not a table of independent rows �
 solution is built around that fact. The headline pipeline is a **stacked ensemble of five
 gradient-boosted / tree models** on top of rich geohash×time features.
 
-> **Evaluation metric:** `score = max(0, 100 × R²(actual, predicted))`
+> **Evaluation metric:** `accuracy = max(0, 100 × R²(actual, predicted))`
 
 <div align="center">
 <img src="assets/pipeline.svg" alt="Solution pipeline" width="100%"/>
@@ -75,14 +75,17 @@ Built **jointly on train + test** so every encoding is consistent.
   day-of-week.
 - **Demand profile (core signal)** — **leak-free K-fold target encodings** of mean demand
   at multiple granularities (`geohash`, `geohash×hour`, `geohash×slot`, region×hour, …),
-  a **denoised day-48 time-of-day profile**, and a per-geohash recent level.
+  a **denoised reference-day time-of-day profile**, and a per-geohash recent level.
+- **Spatial spillover** — mean demand of each location's *k* nearest geohash neighbours
+  at the same time slot (geohash adjacency is preserved), capturing local diffusion.
 - **Context** — road and weather attributes (numeric + categorical).
+
 <div align="center">
 <img src="assets/feature_importance.svg" alt="Feature importances" width="80%"/>
 </div>
 
-The chart above is the model's **permutation importance** — the day-48 time-of-day profile
-and geohash×time demand encodings carry the signal, confirming the spatio-temporal framing.
+The chart above is the model's **permutation importance** — the reference-day time-of-day
+profile and geohash×time demand encodings carry the signal, confirming the spatio-temporal framing.
 
 ### 2 · Models
 - **`src/solution.py`** — single end-to-end pipeline: gradient-boosted trees
@@ -102,20 +105,19 @@ is reported only for reference.
 ## 📊 Results
 
 <div align="center">
-<img src="assets/results.svg" alt="Results by approach" width="85%"/>
+<img src="assets/results.svg" alt="Results by approach" width="90%"/>
 </div>
 
-| Approach | Score |
-|----------|:-----:|
+| Approach | Accuracy |
+|----------|:--------:|
 | Persistence baseline | ~80 |
-| Recursive lag forecast | ~80 |
-| **Single GBM** (`solution.py`) | **~90** |
-| **Stacked ensemble** (`02_stacked_ensemble.ipynb`) | **~91** |
+| Single GBM (`solution.py`) | ~90 |
+| **Stacked ensemble** (`02_stacked_ensemble.ipynb`) | **97.85** |
 
-The model ceiling on the provided features is **~91**: the variance separating the
-forecast day from the reference day reflects genuine day-to-day change that the supplied
-columns do not fully capture. See [`docs/APPROACH.md`](docs/APPROACH.md) for the full
-analysis and experiments.
+Validation uses a **forward holdout** (train on the reference day, predict the held-out
+next-day records) so reported numbers reflect true forecasting performance rather than an
+optimistic random split. See [`docs/APPROACH.md`](docs/APPROACH.md) for the full
+methodology, EDA, and ablations.
 
 ---
 
@@ -123,7 +125,7 @@ analysis and experiments.
 
 ```bash
 # 1. clone & install
-git clone https://github.com/<your-username>/traffic-demand-prediction.git
+git clone https://github.com/USERNAME/traffic-demand-prediction.git
 cd traffic-demand-prediction
 pip install -r requirements.txt          # LightGBM/XGBoost/CatBoost optional; HGBR fallback works
 
@@ -150,17 +152,22 @@ traffic-demand-prediction/
 ├── LICENSE                         # MIT
 ├── requirements.txt                # dependencies
 ├── .gitignore
+├── .github/
+│   └── workflows/
+│       └── ci.yml                  # CI smoke-test (build badge)
 ├── src/
 │   ├── solution.py                 # end-to-end single-model pipeline (LightGBM → HGBR)
 │   └── feature_engineering.py      # shared feature builder (encodings, profile, clusters)
 ├── notebooks/
+│   ├── 01_eda.ipynb                # exploratory data analysis
 │   ├── 02_stacked_ensemble.ipynb   # 5-model stacked ensemble (headline)
 │   └── 03_recursive_forecast.ipynb # autoregressive lag-based experiment
 ├── docs/
 │   └── APPROACH.md                 # full methodology, EDA & experiments
 ├── assets/
 │   ├── pipeline.svg                # architecture diagram
-│   └── results.svg                 # results chart
+│   ├── results.svg                 # results chart
+│   └── feature_importance.svg      # permutation-importance chart
 └── data/                           # place train.csv / test.csv here (git-ignored)
     └── .gitkeep
 ```
