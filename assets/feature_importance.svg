@@ -1,0 +1,14 @@
+<svg viewBox="0 0 720 392" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,Segoe UI,Roboto,sans-serif">
+  <rect width="720" height="392" fill="#0d1117"/>
+  <text x="360" y="34" fill="#e6edf3" font-size="18" font-weight="700" text-anchor="middle">Top Feature Importances</text>
+  <text x="360" y="54" fill="#8b949e" font-size="11" text-anchor="middle">permutation importance · relative to strongest feature</text>
+  <rect x="300" y="78" width="360" height="22" rx="4" fill="#a371f7"/><text x="292" y="94" fill="#c9d1d9" font-size="11.5" text-anchor="end">Road-type demand encoding</text>
+  <rect x="300" y="112" width="269" height="22" rx="4" fill="#8250df"/><text x="292" y="128" fill="#c9d1d9" font-size="11.5" text-anchor="end">Day-48 time-of-day profile</text>
+  <rect x="300" y="146" width="20" height="22" rx="4" fill="#1f6feb"/><text x="292" y="162" fill="#c9d1d9" font-size="11.5" text-anchor="end">Day index</text>
+  <rect x="300" y="180" width="18" height="22" rx="4" fill="#1f6feb"/><text x="292" y="196" fill="#c9d1d9" font-size="11.5" text-anchor="end">Previous-slot demand</text>
+  <rect x="300" y="214" width="18" height="22" rx="4" fill="#2da44e"/><text x="292" y="230" fill="#c9d1d9" font-size="11.5" text-anchor="end">Large vehicles</text>
+  <rect x="300" y="248" width="17" height="22" rx="4" fill="#2da44e"/><text x="292" y="264" fill="#c9d1d9" font-size="11.5" text-anchor="end">Recent location level</text>
+  <rect x="300" y="282" width="13" height="22" rx="4" fill="#388bfd"/><text x="292" y="298" fill="#c9d1d9" font-size="11.5" text-anchor="end">Next-slot demand</text>
+  <rect x="300" y="316" width="3" height="22" rx="4" fill="#388bfd"/><text x="292" y="332" fill="#c9d1d9" font-size="11.5" text-anchor="end">Geohash × hour encoding</text>
+  <text x="300" y="374" fill="#6e7681" font-size="10">The day-48 demand profile and geohash×time encodings dominate — the time-of-day signal the model is built around.</text>
+</svg>

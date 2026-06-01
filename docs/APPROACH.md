@@ -56,7 +56,10 @@ All features are built jointly on train and test so encodings are consistent.
 - **Denoised day-48 time-of-day profile** per geohash (rolling-smoothed across
   neighbouring slots) and neighbouring-slot values as lag-style features.
 - A per-geohash **recent level** feature from the latest available day.
-
+**Spatial spillover**
+- Mean demand of each location's *k* nearest geohash neighbours at the same time slot
+  (computed from the reference day; geohash adjacency is preserved). Captures local
+  diffusion of demand between adjacent areas.
 **Context**
 - `NumberofLanes`, `Temperature` (numeric); `LargeVehicles`, `Landmarks`,
   `RoadType`, `Weather` (categorical / binary-normalized).

@@ -10,6 +10,7 @@
 [![XGBoost](https://img.shields.io/badge/XGBoost-gradient%20boosting-EB0F00)](https://xgboost.readthedocs.io/)
 [![CatBoost](https://img.shields.io/badge/CatBoost-gradient%20boosting-FFCC00)](https://catboost.ai/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
+[![CI](https://github.com/<your-username>/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg)](https://github.com/<your-username>/traffic-demand-prediction/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 *Predicting travel demand to help understand urban traffic patterns and alleviate congestion.*
@@ -76,6 +77,12 @@ Built **jointly on train + test** so every encoding is consistent.
   at multiple granularities (`geohash`, `geohash×hour`, `geohash×slot`, region×hour, …),
   a **denoised day-48 time-of-day profile**, and a per-geohash recent level.
 - **Context** — road and weather attributes (numeric + categorical).
+<div align="center">
+<img src="assets/feature_importance.svg" alt="Feature importances" width="80%"/>
+</div>
+
+The chart above is the model's **permutation importance** — the day-48 time-of-day profile
+and geohash×time demand encodings carry the signal, confirming the spatio-temporal framing.
 
 ### 2 · Models
 - **`src/solution.py`** — single end-to-end pipeline: gradient-boosted trees

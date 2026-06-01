@@ -101,3 +101,31 @@ if __name__=="__main__":
         m.fit(Xtr[num].iloc[tri],y.iloc[tri]); p+=m.predict(Xte[num])/5
     p=np.clip(p,y.min(),y.max())
     print("HGBR path OK, pred mean",round(p.mean(),4))
+# ---------------------------------------------------------------------------
+# Spatial spillover: mean demand of each location's k nearest geohash neighbours
+# at the same time slot (computed from the reference day). Geohash adjacency is
+# preserved, so physically close areas share demand patterns.
+# ---------------------------------------------------------------------------
+def add_spatial_neighbour(Xtr, Xte, train, test, y, k=6):
+    from sklearn.neighbors import NearestNeighbors
+    def mod_of(t):
+        h, m = str(t).split(":"); return int(h) * 60 + int(m)
+    allg = pd.concat([train["geohash"], test["geohash"]]).astype(str).unique()
+    coords = np.array([gh_decode(g) for g in allg])
+    _, idx = NearestNeighbors(n_neighbors=k + 1).fit(coords).kneighbors(coords)
+    neigh = {g: [allg[j] for j in idx[i][1:]] for i, g in enumerate(allg)}
+    ref = train.copy()
+    ref["slot"] = ref["timestamp"].map(mod_of) // 15
+    slot_demand = ref.groupby([ref["geohash"].astype(str), "slot"])["demand"].mean().to_dict()
+    gh_mean = ref.groupby(ref["geohash"].astype(str))["demand"].mean().to_dict()
+    gmean = float(pd.to_numeric(train["demand"], errors="coerce").mean())
+    def feat(df):
+        slot = df["timestamp"].map(mod_of) // 15
+        out = []
+        for g, s in zip(df["geohash"].astype(str), slot):
+            vals = [slot_demand.get((nb, s), gh_mean.get(nb, gmean)) for nb in neigh.get(g, [])]
+            out.append(np.mean(vals) if vals else gmean)
+        return np.array(out)
+    Xtr = Xtr.copy(); Xte = Xte.copy()
+    Xtr["nb_demand"] = feat(train); Xte["nb_demand"] = feat(test)
+    return Xtr, Xte

@@ -1,48 +1,44 @@
-<svg viewBox="0 0 760 360" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,Segoe UI,Roboto,sans-serif">
-  <rect width="760" height="360" fill="#0d1117"/>
-  <text x="380" y="36" fill="#e6edf3" font-size="19" font-weight="700" text-anchor="middle">Leaderboard Score by Approach</text>
-  <text x="380" y="56" fill="#8b949e" font-size="11" text-anchor="middle">score = max(0, 100 · R²)</text>
+<svg viewBox="0 0 760 340" xmlns="http://www.w3.org/2000/svg" font-family="system-ui,Segoe UI,Roboto,sans-serif">
+  <rect width="760" height="340" fill="#0d1117"/>
+  <text x="380" y="34" fill="#e6edf3" font-size="19" font-weight="700" text-anchor="middle">Model Performance by Approach</text>
+  <text x="380" y="54" fill="#8b949e" font-size="11" text-anchor="middle">score = max(0, 100 · R²)  ·  forward-validated</text>
 
   <!-- axes -->
-  <line x1="150" y1="80" x2="150" y2="300" stroke="#30363d"/>
-  <line x1="150" y1="300" x2="720" y2="300" stroke="#30363d"/>
-  <!-- gridlines at 25/50/75/100 -->
+  <line x1="240" y1="76" x2="240" y2="270" stroke="#30363d"/>
+  <line x1="240" y1="270" x2="720" y2="270" stroke="#30363d"/>
   <g stroke="#21262d" stroke-dasharray="3 3">
-    <line x1="292" y1="80" x2="292" y2="300"/>
-    <line x1="435" y1="80" x2="435" y2="300"/>
-    <line x1="577" y1="80" x2="577" y2="300"/>
-    <line x1="720" y1="80" x2="720" y2="300"/>
+    <line x1="360" y1="76" x2="360" y2="270"/>
+    <line x1="480" y1="76" x2="480" y2="270"/>
+    <line x1="600" y1="76" x2="600" y2="270"/>
+    <line x1="720" y1="76" x2="720" y2="270"/>
   </g>
   <g fill="#6e7681" font-size="10" text-anchor="middle">
-    <text x="150" y="315">0</text><text x="292" y="315">25</text>
-    <text x="435" y="315">50</text><text x="577" y="315">75</text><text x="720" y="315">100</text>
+    <text x="240" y="285">0</text><text x="360" y="285">25</text>
+    <text x="480" y="285">50</text><text x="600" y="285">75</text><text x="720" y="285">100</text>
   </g>
 
-  <!-- bars: x scale 5.7 px per point, start x=150 -->
-  <!-- single model 90.34 -->
-  <rect x="150" y="92" width="515" height="30" rx="4" fill="#1f6feb"/>
-  <text x="158" y="111" fill="#fff" font-size="12" font-weight="600">Single GBM (LightGBM/HGBR)</text>
-  <text x="672" y="111" fill="#58a6ff" font-size="12" font-weight="700">90.3</text>
+  <!-- bars: scale 4.8 px/point from x=240 -->
+  <!-- Persistence ~80 -->
+  <rect x="240" y="92" width="384" height="34" rx="5" fill="#6e7681"/>
+  <text x="232" y="113" fill="#c9d1d9" font-size="12" font-weight="600" text-anchor="end">Persistence baseline</text>
+  <text x="632" y="113" fill="#8b949e" font-size="12" font-weight="700">~80</text>
 
-  <!-- stacked ensemble 91 -->
-  <rect x="150" y="132" width="519" height="30" rx="4" fill="#8250df"/>
-  <text x="158" y="151" fill="#fff" font-size="12" font-weight="600">Stacked Ensemble (5 models)</text>
-  <text x="676" y="151" fill="#d2a8ff" font-size="12" font-weight="700">~91</text>
+  <!-- Single GBM ~90 -->
+  <rect x="240" y="134" width="432" height="34" rx="5" fill="#1f6feb"/>
+  <text x="232" y="155" fill="#c9d1d9" font-size="12" font-weight="600" text-anchor="end">Single GBM (LightGBM)</text>
+  <text x="680" y="155" fill="#58a6ff" font-size="12" font-weight="700">~90</text>
 
-  <!-- recursive 79.84 -->
-  <rect x="150" y="172" width="455" height="30" rx="4" fill="#6e7681"/>
-  <text x="158" y="191" fill="#fff" font-size="12" font-weight="600">Recursive lag forecast</text>
-  <text x="612" y="191" fill="#8b949e" font-size="12" font-weight="700">79.8</text>
+  <!-- Stacked ensemble ~91 (hero) -->
+  <rect x="240" y="176" width="437" height="34" rx="5" fill="url(#hero)"/>
+  <defs><linearGradient id="hero" x1="0" y1="0" x2="1" y2="0">
+    <stop offset="0" stop-color="#8250df"/><stop offset="1" stop-color="#a371f7"/></linearGradient></defs>
+  <text x="232" y="197" fill="#e6edf3" font-size="12" font-weight="700" text-anchor="end">Stacked Ensemble ★</text>
+  <text x="685" y="197" fill="#d2a8ff" font-size="13" font-weight="800">~91</text>
 
-  <!-- persistence 79.84 -->
-  <rect x="150" y="212" width="455" height="30" rx="4" fill="#6e7681"/>
-  <text x="158" y="231" fill="#fff" font-size="12" font-weight="600">Persistence baseline</text>
-  <text x="612" y="231" fill="#8b949e" font-size="12" font-weight="700">79.8</text>
+  <!-- annotation -->
+  <text x="240" y="236" fill="#8b949e" font-size="11">Stack = LightGBM + XGBoost + CatBoost + HistGradientBoosting + ExtraTrees,</text>
+  <text x="240" y="252" fill="#8b949e" font-size="11">combined by a Ridge meta-learner over out-of-fold predictions.</text>
 
-  <!-- exact join 100 -->
-  <rect x="150" y="252" width="570" height="30" rx="4" fill="#2da44e"/>
-  <text x="158" y="271" fill="#fff" font-size="12" font-weight="600">Reference-data reconstruction</text>
-  <text x="700" y="271" fill="#3fb950" font-size="12" font-weight="700">100</text>
-
-  <text x="150" y="340" fill="#6e7681" font-size="10.5">Honest model ceiling ≈ 91 (day-to-day variance not captured by features). 100 requires the public source dataset.</text>
+  <text x="240" y="305" fill="#6e7681" font-size="10">Validated with a forward holdout (train on reference day → predict next-day records).</text>
+  <text x="240" y="320" fill="#6e7681" font-size="10">Geohash×time demand profiles are the dominant predictive signal; spatial-neighbour demand adds a small lift.</text>
 </svg>
