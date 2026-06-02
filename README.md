@@ -12,6 +12,7 @@
 [![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
 [![CI](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
+[![Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://simply-mihir-traffic-demand-prediction.streamlit.app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 *Predicting travel demand to help understand urban traffic patterns and alleviate congestion.*
