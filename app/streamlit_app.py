@@ -1,8 +1,9 @@
 """
 Traffic Demand Prediction — Interactive Demo
-Glass-morphism UI · multi-accent dark theme
+Glass-morphism UI · loads precomputed profiles (no raw data needed)
 """
 
+import json as _json
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -38,17 +39,11 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
-# DESIGN SYSTEM — multi-accent, glass-morphism, aurora dark
-# Palette: Coral #ff6b6b / Electric blue #38bdf8 / Mint #34d399 /
-#          Amber #fbbf24 / Lavender #a78bfa / Rose #f472b6
-# Background: deep slate-navy with soft aurora washes
+# CSS (same glass-morphism multi-accent theme)
 # ---------------------------------------------------------------------------
-st.markdown(
-    """
+CSS = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-
-    /* ---- aurora background: deep slate-navy glass base ---- */
     .stApp {
         background: #0c1220;
         background-image:
@@ -58,10 +53,7 @@ st.markdown(
             radial-gradient(ellipse 50% 40% at 20% 70%, rgba(52,211,153,0.035) 0%, transparent 50%);
         font-family: 'Inter', sans-serif;
     }
-
     #MainMenu, footer, header {visibility: hidden;}
-
-    /* ---- sidebar ---- */
     section[data-testid="stSidebar"] {
         background: rgba(12, 16, 28, 0.88) !important;
         backdrop-filter: blur(24px) !important;
@@ -69,178 +61,158 @@ st.markdown(
         border-right: 1px solid rgba(56, 189, 248, 0.08) !important;
     }
     section[data-testid="stSidebar"] label {
-        color: #8892b0 !important;
-        font-weight: 500 !important;
-        font-size: 0.82rem !important;
-        letter-spacing: 0.03em;
-        text-transform: uppercase;
+        color: #8892b0 !important; font-weight: 500 !important;
+        font-size: 0.82rem !important; letter-spacing: 0.03em; text-transform: uppercase;
     }
     .sidebar-title {
         font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em;
         background: linear-gradient(135deg, #38bdf8, #34d399);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        margin-bottom: 8px;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text; margin-bottom: 8px;
     }
     .sidebar-sub { color: #4a5270; font-size: 0.78rem; margin-bottom: 20px;
         padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.04); }
-    .sidebar-section {
-        color: #5a6280; font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-        letter-spacing: 0.12em; margin: 20px 0 8px 0;
-    }
-
-    /* ---- hero ---- */
+    .sidebar-section { color: #5a6280; font-size: 0.7rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.12em; margin: 20px 0 8px 0; }
     .hero-title {
         font-size: 2.8rem; font-weight: 900; line-height: 1.1; letter-spacing: -0.04em;
         background: linear-gradient(135deg, #e2e8f0 0%, #f472b6 35%, #fbbf24 65%, #34d399 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        margin-bottom: 8px;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text; margin-bottom: 8px;
     }
-    .hero-sub {
-        color: #4a5270; font-size: 0.95rem; font-weight: 400;
-        margin-bottom: 24px; line-height: 1.5;
-    }
-
-    /* ---- tags (each a different color) ---- */
+    .hero-sub { color: #4a5270; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.5; }
     .tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
-    .tag-coral { background: rgba(255,107,107,0.1); color: #ff6b6b; border: 1px solid rgba(255,107,107,0.2); }
-    .tag-blue { background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
-    .tag-mint { background: rgba(52,211,153,0.1); color: #34d399; border: 1px solid rgba(52,211,153,0.2); }
-    .tag-amber { background: rgba(251,191,36,0.1); color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
-    .tag-coral, .tag-blue, .tag-mint, .tag-amber {
-        display: inline-block; border-radius: 100px; padding: 5px 16px;
-        font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
-    }
-
-    /* ---- metric cards (each its own accent) ---- */
+    .tag-coral { background: rgba(255,107,107,0.1); color: #ff6b6b;
+        border: 1px solid rgba(255,107,107,0.2); display: inline-block;
+        border-radius: 100px; padding: 5px 16px; font-size: 0.72rem;
+        font-weight: 600; letter-spacing: 0.04em; }
+    .tag-blue { background: rgba(56,189,248,0.1); color: #38bdf8;
+        border: 1px solid rgba(56,189,248,0.2); display: inline-block;
+        border-radius: 100px; padding: 5px 16px; font-size: 0.72rem;
+        font-weight: 600; letter-spacing: 0.04em; }
+    .tag-mint { background: rgba(52,211,153,0.1); color: #34d399;
+        border: 1px solid rgba(52,211,153,0.2); display: inline-block;
+        border-radius: 100px; padding: 5px 16px; font-size: 0.72rem;
+        font-weight: 600; letter-spacing: 0.04em; }
+    .tag-amber { background: rgba(251,191,36,0.1); color: #fbbf24;
+        border: 1px solid rgba(251,191,36,0.2); display: inline-block;
+        border-radius: 100px; padding: 5px 16px; font-size: 0.72rem;
+        font-weight: 600; letter-spacing: 0.04em; }
     .metric-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
-    .m-card {
-        background: rgba(255,255,255,0.025); backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.05);
+    .m-card { background: rgba(255,255,255,0.025); backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05);
         border-radius: 16px; padding: 28px 24px; text-align: center;
         transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-        position: relative; overflow: hidden;
-    }
-    .m-card::before {
-        content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-        border-radius: 16px 16px 0 0;
-    }
+        position: relative; overflow: hidden; }
+    .m-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0;
+        height: 3px; border-radius: 16px 16px 0 0; }
     .m-card:hover { transform: translateY(-3px); }
     .m-coral::before { background: linear-gradient(90deg, #ff6b6b, #fbbf24); }
-    .m-coral:hover { box-shadow: 0 16px 48px rgba(255,107,107,0.12); border-color: rgba(255,107,107,0.15); }
+    .m-coral:hover { box-shadow: 0 16px 48px rgba(255,107,107,0.12);
+        border-color: rgba(255,107,107,0.15); }
     .m-blue::before { background: linear-gradient(90deg, #38bdf8, #a78bfa); }
-    .m-blue:hover { box-shadow: 0 16px 48px rgba(56,189,248,0.12); border-color: rgba(56,189,248,0.15); }
+    .m-blue:hover { box-shadow: 0 16px 48px rgba(56,189,248,0.12);
+        border-color: rgba(56,189,248,0.15); }
     .m-mint::before { background: linear-gradient(90deg, #34d399, #38bdf8); }
-    .m-mint:hover { box-shadow: 0 16px 48px rgba(52,211,153,0.12); border-color: rgba(52,211,153,0.15); }
-    .m-label {
-        color: #5a6280; font-size: 0.7rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px;
-    }
+    .m-mint:hover { box-shadow: 0 16px 48px rgba(52,211,153,0.12);
+        border-color: rgba(52,211,153,0.15); }
+    .m-label { color: #5a6280; font-size: 0.7rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
     .m-sub { color: #3d4560; font-size: 0.76rem; margin-top: 8px; }
-    .m-val-coral {
-        font-size: 2.2rem; font-weight: 900; line-height: 1.2;
+    .m-val-coral { font-size: 2.2rem; font-weight: 900; line-height: 1.2;
         background: linear-gradient(135deg, #ff6b6b, #fbbf24);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .m-val-blue {
-        font-size: 1.6rem; font-weight: 800; line-height: 1.2;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text; }
+    .m-val-blue { font-size: 1.6rem; font-weight: 800; line-height: 1.2;
         background: linear-gradient(135deg, #38bdf8, #a78bfa);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .m-val-mint {
-        font-size: 1.2rem; font-weight: 700; line-height: 1.3;
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text; }
+    .m-val-mint { font-size: 1.2rem; font-weight: 700; line-height: 1.3;
         background: linear-gradient(135deg, #34d399, #38bdf8);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-
-    /* ---- section headers (colored accents) ---- */
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text; }
     .sh { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em;
         margin: 36px 0 14px 0; padding-bottom: 10px;
         border-bottom: 1px solid rgba(255,255,255,0.04);
         display: flex; align-items: center; gap: 10px; }
     .sh-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-    .sh-coral { color: #d4a0a0; } .sh-coral .sh-dot { background: #ff6b6b; box-shadow: 0 0 12px rgba(255,107,107,0.4); }
-    .sh-blue { color: #9ab8d4; }  .sh-blue .sh-dot { background: #38bdf8; box-shadow: 0 0 12px rgba(56,189,248,0.4); }
-    .sh-mint { color: #8ec5b0; }  .sh-mint .sh-dot { background: #34d399; box-shadow: 0 0 12px rgba(52,211,153,0.4); }
-    .sh-amber { color: #c4ad78; } .sh-amber .sh-dot { background: #fbbf24; box-shadow: 0 0 12px rgba(251,191,36,0.4); }
-
-    /* ---- glass card ---- */
-    .glass {
-        background: rgba(255,255,255,0.02); backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(255,255,255,0.05);
-        border-radius: 16px; padding: 24px; margin: 8px 0;
-        transition: all 0.3s ease;
-    }
+    .sh-coral { color: #d4a0a0; }
+    .sh-coral .sh-dot { background: #ff6b6b; box-shadow: 0 0 12px rgba(255,107,107,0.4); }
+    .sh-blue { color: #9ab8d4; }
+    .sh-blue .sh-dot { background: #38bdf8; box-shadow: 0 0 12px rgba(56,189,248,0.4); }
+    .sh-mint { color: #8ec5b0; }
+    .sh-mint .sh-dot { background: #34d399; box-shadow: 0 0 12px rgba(52,211,153,0.4); }
+    .sh-amber { color: #c4ad78; }
+    .sh-amber .sh-dot { background: #fbbf24; box-shadow: 0 0 12px rgba(251,191,36,0.4); }
+    .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 16px; padding: 24px; margin: 8px 0; transition: all 0.3s ease; }
     .glass:hover { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.03); }
-
-    /* ---- stat rows ---- */
     .s-row { display: flex; justify-content: space-between; padding: 12px 4px;
         border-bottom: 1px solid rgba(255,255,255,0.025); font-size: 0.88rem; }
     .s-lbl { color: #5a6280; font-weight: 500; }
     .s-val { font-weight: 600; }
-    .s-val-coral { color: #ff6b6b; } .s-val-blue { color: #38bdf8; }
-    .s-val-mint { color: #34d399; } .s-val-amber { color: #fbbf24; }
-    .s-val-lav { color: #a78bfa; } .s-val-rose { color: #f472b6; }
-
-    /* ---- aurora divider ---- */
-    .aurora-div {
-        height: 1px; margin: 36px 0; border: none;
+    .s-val-coral { color: #ff6b6b; }
+    .s-val-blue { color: #38bdf8; }
+    .s-val-mint { color: #34d399; }
+    .s-val-amber { color: #fbbf24; }
+    .s-val-lav { color: #a78bfa; }
+    .s-val-rose { color: #f472b6; }
+    .aurora-div { height: 1px; margin: 36px 0; border: none;
         background: linear-gradient(90deg, transparent, rgba(255,107,107,0.15),
-            rgba(56,189,248,0.15), rgba(52,211,153,0.15), transparent);
-    }
-
-    /* ---- footer ---- */
+        rgba(56,189,248,0.15), rgba(52,211,153,0.15), transparent); }
     .app-foot { text-align: center; padding: 48px 0 24px 0; font-size: 0.76rem;
         color: #2a2f42; letter-spacing: 0.03em; }
     .app-foot span { background: linear-gradient(90deg, #ff6b6b, #38bdf8, #34d399);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         background-clip: text; font-weight: 700; }
-
-    /* ---- streamlit overrides ---- */
     .stSelectbox > div > div { background: rgba(255,255,255,0.03) !important;
         border-color: rgba(255,255,255,0.06) !important; border-radius: 10px !important; }
     div[data-testid="stMetric"] { display: none; }
     div[data-baseweb="select"] > div { background: rgba(255,255,255,0.03) !important; }
-    .stSlider > div > div > div > div { background: linear-gradient(90deg, #38bdf8, #34d399) !important; }
+    .stSlider > div > div > div > div {
+        background: linear-gradient(90deg, #38bdf8, #34d399) !important; }
 </style>
-""",
-    unsafe_allow_html=True,
-)
+"""
+st.markdown(CSS, unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------------------
-# Load data
+# Load PRECOMPUTED PROFILES (no raw dataset needed)
 # ---------------------------------------------------------------------------
 @st.cache_data
-def load_data():
-    for p in ["data/train.csv", "../data/train.csv", "train.csv"]:
-        if Path(p).exists():
-            return pd.read_csv(p)
+def load_profiles():
+    """Load aggregated demand profiles. No raw train.csv required."""
+    for root in [
+        Path(__file__).parent / "data",
+        Path(__file__).parent,
+        Path("data"),
+        Path("."),
+    ]:
+        if (root / "profiles_meta.json").exists():
+            meta = _json.load(open(root / "profiles_meta.json"))
+            gs = pd.read_csv(root / "profiles_slot.csv", index_col=[0, 1])["demand"]
+            gh = pd.read_csv(root / "profiles_hour.csv", index_col=[0, 1])["demand"]
+            gm = pd.read_csv(root / "profiles_geohash.csv", index_col=0)["demand"]
+            st_ = pd.read_csv(root / "profiles_stats.csv")
+            return gs, gh, gm, st_, meta
     return None
 
 
-train = load_data()
-if train is None:
+profiles = load_profiles()
+if profiles is None:
     st.markdown(
-        '<p style="color:#ff6b6b;font-size:0.95rem;">'
-        "Place train.csv in the data/ folder to enable the demo.</p>",
+        '<p style="color:#ff6b6b;">Profile data not found. '
+        "Place the profile CSVs in app/data/.</p>",
         unsafe_allow_html=True,
     )
     st.stop()
 
-
-def mod_of(t):
-    h, m = str(t).split(":")
-    return int(h) * 60 + int(m)
-
-
-train["mod"] = train["timestamp"].map(mod_of)
-train["hour"] = train["mod"] // 60
-train["slot"] = train["mod"] // 15
-all_gh = sorted(train["geohash"].unique())
-all_road = sorted(train["RoadType"].dropna().unique())
-all_weather = sorted(train["Weather"].dropna().unique())
+gh_slot, gh_hour, gh_mean, gh_stats, meta = profiles
+all_gh = sorted(gh_mean.index.tolist())
+all_road = meta["road_types"]
+all_weather = meta["weather_types"]
+global_mean = meta["global_mean"]
 
 
 # ---------------------------------------------------------------------------
@@ -256,7 +228,6 @@ with st.sidebar:
         "demand prediction.</div>",
         unsafe_allow_html=True,
     )
-
     st.markdown(
         '<div class="sidebar-section">Location and Time</div>',
         unsafe_allow_html=True,
@@ -286,20 +257,8 @@ lat, lon = decode_geohash(gh)
 
 
 # ---------------------------------------------------------------------------
-# Prediction
+# Prediction (profile lookup)
 # ---------------------------------------------------------------------------
-@st.cache_data
-def build_profiles(_train):
-    return (
-        _train.groupby(["geohash", "slot"])["demand"].mean(),
-        _train.groupby(["geohash", "hour"])["demand"].mean(),
-        _train.groupby("geohash")["demand"].mean(),
-        _train["demand"].mean(),
-    )
-
-
-gh_slot, gh_hour, gh_mean, global_mean = build_profiles(train)
-
 if (gh, slot) in gh_slot.index:
     pred = gh_slot[(gh, slot)]
     source = "geohash x slot"
@@ -329,7 +288,6 @@ st.markdown(
     "spatio-temporal feature engineering.</div>",
     unsafe_allow_html=True,
 )
-
 st.markdown(
     """<div class="tag-row">
     <span class="tag-coral">spatio-temporal</span>
@@ -374,7 +332,6 @@ st.markdown(
 """,
     unsafe_allow_html=True,
 )
-
 st.markdown('<div class="aurora-div"></div>', unsafe_allow_html=True)
 
 
@@ -382,22 +339,30 @@ st.markdown('<div class="aurora-div"></div>', unsafe_allow_html=True)
 # Demand profile chart
 # ---------------------------------------------------------------------------
 st.markdown(
-    f'<div class="sh sh-coral"><span class="sh-dot"></span>Demand Profile — {gh}</div>',
+    f'<div class="sh sh-coral"><span class="sh-dot"></span>Demand Profile '
+    f"- {gh}</div>",
     unsafe_allow_html=True,
 )
 
-profile = train[train["geohash"] == gh].groupby("hour")["demand"].mean()
+profile_data = (
+    gh_hour.loc[gh_hour.index.get_level_values(0) == gh]
+    if gh in gh_mean.index
+    else pd.Series(dtype=float)
+)
+profile = profile_data.droplevel(0) if len(profile_data) > 0 else pd.Series(dtype=float)
+
 if len(profile) > 0:
     chart_data = (
         pd.DataFrame({"hour": range(24)})
         .merge(
-            profile.reset_index().rename(columns={"demand": "avg_demand"}),
+            profile.reset_index().rename(
+                columns={"hour": "hour", "demand": "avg_demand"}
+            ),
             on="hour",
             how="left",
         )
         .fillna(0)
     )
-
     st.markdown('<div class="glass">', unsafe_allow_html=True)
     st.bar_chart(
         chart_data.set_index("hour")["avg_demand"],
@@ -406,8 +371,8 @@ if len(profile) > 0:
     )
     st.markdown("</div>", unsafe_allow_html=True)
     st.markdown(
-        f'<p style="color:#3d4560;font-size:0.78rem;text-align:center;margin-top:4px;">'
-        f"Hourly average demand at this location. Selected time: {hour:02d}:{minute:02d}</p>",
+        f'<p style="color:#3d4560;font-size:0.78rem;text-align:center;">'
+        f"Hourly average demand. Selected: {hour:02d}:{minute:02d}</p>",
         unsafe_allow_html=True,
     )
 
@@ -424,15 +389,15 @@ st.markdown(
 st.markdown('<div class="glass">', unsafe_allow_html=True)
 st.map(pd.DataFrame({"lat": [lat], "lon": [lon]}), zoom=11)
 st.markdown("</div>", unsafe_allow_html=True)
-
 st.markdown('<div class="aurora-div"></div>', unsafe_allow_html=True)
 
 
 # ---------------------------------------------------------------------------
 # Stats
 # ---------------------------------------------------------------------------
-gh_data = train[train["geohash"] == gh]
-if len(gh_data) > 0:
+stats_row = gh_stats[gh_stats["geohash"] == gh]
+if len(stats_row) > 0:
+    sr = stats_row.iloc[0]
     st.markdown(
         '<div class="sh sh-amber"><span class="sh-dot"></span>Location Statistics</div>',
         unsafe_allow_html=True,
@@ -440,17 +405,17 @@ if len(gh_data) > 0:
     st.markdown(
         f"""<div class="glass">
         <div class="s-row"><span class="s-lbl">Training rows</span>
-            <span class="s-val s-val-amber">{len(gh_data):,}</span></div>
+            <span class="s-val s-val-amber">{int(sr["count"]):,}</span></div>
         <div class="s-row"><span class="s-lbl">Demand range</span>
-            <span class="s-val s-val-coral">{gh_data["demand"].min():.4f} — {gh_data["demand"].max():.4f}</span></div>
+            <span class="s-val s-val-coral">{sr["demand_min"]:.4f} — {sr["demand_max"]:.4f}</span></div>
         <div class="s-row"><span class="s-lbl">Mean demand</span>
-            <span class="s-val s-val-blue">{gh_data["demand"].mean():.4f}</span></div>
+            <span class="s-val s-val-blue">{sr["demand_mean"]:.4f}</span></div>
         <div class="s-row"><span class="s-lbl">Unique timestamps</span>
-            <span class="s-val s-val-mint">{gh_data["timestamp"].nunique()}</span></div>
+            <span class="s-val s-val-mint">{int(sr["n_timestamps"])}</span></div>
         <div class="s-row"><span class="s-lbl">Road types</span>
-            <span class="s-val s-val-lav">{gh_data["RoadType"].nunique()}</span></div>
+            <span class="s-val s-val-lav">{int(sr["n_road"])}</span></div>
         <div class="s-row"><span class="s-lbl">Weather conditions</span>
-            <span class="s-val s-val-rose">{gh_data["Weather"].nunique()}</span></div>
+            <span class="s-val s-val-rose">{int(sr["n_weather"])}</span></div>
     </div>""",
         unsafe_allow_html=True,
     )
@@ -482,7 +447,6 @@ st.markdown(
 </div>""",
     unsafe_allow_html=True,
 )
-
 
 # ---------------------------------------------------------------------------
 # Footer
