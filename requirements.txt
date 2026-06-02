@@ -1,7 +1,18 @@
+# Core
 pandas>=1.5
 numpy>=1.23
 scikit-learn>=1.2
+
+# Gradient boosting (optional — HGBR fallback works without these)
 lightgbm>=3.3
 xgboost>=1.7
 catboost>=1.2
+
+# Notebooks
 jupyter
+matplotlib
+
+# Dev tools (optional)
+ruff
+mypy
+pre-commit

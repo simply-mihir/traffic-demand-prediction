@@ -11,6 +11,7 @@
 [![CatBoost](https://img.shields.io/badge/CatBoost-gradient%20boosting-FFCC00)](https://catboost.ai/)
 [![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
 [![CI](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml)
+[![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 *Predicting travel demand to help understand urban traffic patterns and alleviate congestion.*
@@ -144,31 +145,59 @@ predictions clipped to `[0, 1]`.
 
 ---
 
+## ⚡ Quick commands
+
+| Command | What it does |
+|---------|-------------|
+| `make train` | Run the single-model pipeline → `submission.csv` |
+| `make ensemble` | Execute the stacked-ensemble notebook |
+| `make test` | CI smoke test on synthetic data |
+| `make lint` | Run ruff + mypy |
+| `python tests/validate_data.py` | Schema & quality checks on `data/*.csv` |
+| `docker build -t traffic . && docker run traffic` | Containerized smoke test |
+
+---
+
+
 ## 📁 Repository structure
 
 ```
 traffic-demand-prediction/
-├── README.md                       # this file
-├── LICENSE                         # MIT
-├── requirements.txt                # dependencies
+├── README.md
+├── LICENSE
+├── Makefile                        # one-command: make train / make test
+├── Dockerfile                      # reproducible container
+├── CHANGELOG.md                    # iteration history
+├── CONTRIBUTING.md                 # how to contribute
+├── requirements.txt
 ├── .gitignore
+├── .pre-commit-config.yaml         # auto-format on commit
 ├── .github/
-│   └── workflows/
-│       └── ci.yml                  # CI smoke-test (build badge)
+│   ├── workflows/
+│   │   └── ci.yml                  # CI workflow (build badge)
+│   └── ISSUE_TEMPLATE/
+│       ├── bug_report.md
+│       └── feature_request.md
 ├── src/
-│   ├── solution.py                 # end-to-end single-model pipeline (LightGBM → HGBR)
-│   └── feature_engineering.py      # shared feature builder (encodings, profile, clusters)
+│   ├── solution.py
+│   └── feature_engineering.py
 ├── notebooks/
-│   ├── 01_eda.ipynb                # exploratory data analysis
-│   ├── 02_stacked_ensemble.ipynb   # 5-model stacked ensemble (headline)
-│   └── 03_recursive_forecast.ipynb # autoregressive lag-based experiment
+│   ├── 01_eda.ipynb
+│   ├── 02_stacked_ensemble.ipynb
+│   ├── 03_recursive_forecast.ipynb
+│   ├── 04_error_analysis.ipynb     # residual analysis by hour/road/weather
+│   ├── 05_ablation_study.ipynb     # feature-group contribution
+│   └── 06_geospatial_visualization.ipynb  # demand heatmaps & clusters
+├── tests/
+│   ├── make_synth_and_check.py     # CI smoke test
+│   └── validate_data.py            # schema & quality checks
 ├── docs/
-│   └── APPROACH.md                 # full methodology, EDA & experiments
+│   └── APPROACH.md
 ├── assets/
-│   ├── pipeline.svg                # architecture diagram
-│   ├── results.svg                 # results chart
-│   └── feature_importance.svg      # permutation-importance chart
-└── data/                           # place train.csv / test.csv here (git-ignored)
+│   ├── pipeline.svg
+│   ├── results.svg
+│   └── feature_importance.svg
+└── data/
     └── .gitkeep
 ```
 
