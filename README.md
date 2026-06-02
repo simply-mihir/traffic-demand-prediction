@@ -54,6 +54,30 @@ gradient-boosted / tree models** on top of rich geohash×time features.
 <p align="center"><i>Spatial evolution of demand across the day — the same hotspots intensify from night to morning.</i></p>
 
 ---
+## 🌐 Live Demo
+
+An interactive Streamlit app lets you explore demand predictions for any location and time — no setup required.
+
+**[Launch the demo →](https://traffic-demand-prediction-simply-mihir.streamlit.app)**
+
+Select a geohash, hour, road type, and weather condition to see the predicted demand, a 24-hour profile chart, a map pin, and location statistics. The app runs on precomputed aggregated profiles (no raw data is exposed).
+
+---
+## 🌍 Geospatial Analysis
+
+<div align="center">
+<img src="assets/demand_hotspot_map.png" alt="Demand hotspot map" width="60%"/>
+</div>
+
+<p align="center"><i>Demand hotspot map — brighter regions indicate higher average demand. Spatial clustering validates geohash-based features.</i></p>
+
+<div align="center">
+<img src="assets/demand_by_hour.png" alt="Demand by hour" width="90%"/>
+</div>
+
+<p align="center"><i>Spatial evolution of demand across the day — the same hotspots intensify from night to morning peak.</i></p>
+
+---
 
 ## 🗂️ Dataset
 
@@ -153,6 +177,21 @@ next-day records) so reported numbers reflect true forecasting performance rathe
 optimistic random split. See [`docs/APPROACH.md`](docs/APPROACH.md) for the full
 methodology, EDA, and ablations.
 
+### Feature ablation
+
+<div align="center">
+<img src="assets/ablation.png" alt="Ablation study" width="80%"/>
+</div>
+
+<p align="center"><i>Each row adds one feature group — geohash×time target encodings provide the single largest lift.</i></p>
+
+### Error analysis
+
+<div align="center">
+<img src="assets/error_by_hour.png" alt="Error by hour" width="80%"/>
+</div>
+
+<p align="center"><i>Errors peak during high-demand hours; the model slightly under-predicts demand spikes.</i></p>
 ---
 
 ## 🚀 Quickstart
@@ -177,6 +216,19 @@ Both produce a `submission.csv` of shape **(41778, 2)** with columns `Index, dem
 predictions clipped to `[0, 1]`.
 
 ---
+
+## ⚡ Quick Commands
+
+| Command | What it does |
+|---------|-------------|
+| `make train` | Run single-model pipeline → `submission.csv` |
+| `make ensemble` | Execute the stacked-ensemble notebook |
+| `make test` | CI smoke test on synthetic data |
+| `make lint` | Run ruff + mypy |
+| `python tests/validate_data.py` | Schema and quality checks on `data/*.csv` |
+| `docker build -t traffic . && docker run traffic` | Containerized smoke test |
+---
+
 
 ## ⚡ Quick commands
 
@@ -204,34 +256,31 @@ traffic-demand-prediction/
 ├── CONTRIBUTING.md                 # how to contribute
 ├── requirements.txt
 ├── .gitignore
-├── .pre-commit-config.yaml         # auto-format on commit
+├── .pre-commit-config.yaml         # auto-format on commit (ruff)
 ├── .github/
-│   ├── workflows/
-│   │   └── ci.yml                  # CI workflow (build badge)
-│   └── ISSUE_TEMPLATE/
-│       ├── bug_report.md
-│       └── feature_request.md
+│   ├── workflows/ci.yml            # CI workflow (build badge)
+│   └── ISSUE_TEMPLATE/             # bug report + feature request
+├── app/
+│   ├── streamlit_app.py            # interactive demo (glass-morphism UI)
+│   ├── data/profiles_*.csv|json    # precomputed profiles (no raw data)
+│   └── .streamlit/config.toml      # dark theme
 ├── src/
-│   ├── solution.py
-│   └── feature_engineering.py
+│   ├── solution.py                 # end-to-end pipeline (LightGBM → HGBR)
+│   └── feature_engineering.py      # shared feature builder (42 features)
 ├── notebooks/
-│   ├── 01_eda.ipynb
-│   ├── 02_stacked_ensemble.ipynb
-│   ├── 03_recursive_forecast.ipynb
+│   ├── 01_eda.ipynb                # exploratory data analysis
+│   ├── 02_stacked_ensemble.ipynb   # 5-model stacked ensemble (headline)
+│   ├── 03_recursive_forecast.ipynb # autoregressive experiment
 │   ├── 04_error_analysis.ipynb     # residual analysis by hour/road/weather
-│   ├── 05_ablation_study.ipynb     # feature-group contribution
+│   ├── 05_ablation_study.ipynb     # feature-group contribution study
 │   └── 06_geospatial_visualization.ipynb  # demand heatmaps & clusters
 ├── tests/
 │   ├── make_synth_and_check.py     # CI smoke test
 │   └── validate_data.py            # schema & quality checks
 ├── docs/
-│   └── APPROACH.md
-├── assets/
-│   ├── pipeline.svg
-│   ├── results.svg
-│   └── feature_importance.svg
-└── data/
-    └── .gitkeep
+│   └── APPROACH.md                 # full methodology
+├── assets/                         # SVG diagrams + generated PNG charts
+└── data/.gitkeep                   # local data (git-ignored)
 ```
 
 ---
@@ -245,9 +294,29 @@ traffic-demand-prediction/
 | *Own vs. neighbour demand* | *Residual distribution* |
 
 ---
-## 🛠️ Tech stack
+## 🗺️ More Visualizations
 
-`Python` · `pandas` · `numpy` · `scikit-learn` · `LightGBM` · `XGBoost` · `CatBoost` · `Jupyter`
+| | |
+|:---:|:---:|
+| ![Grid](assets/geospatial_grid.png) | ![Clusters](assets/geo_clusters.png) |
+| *Decoded geohash grid* | *K-means geo-clusters (k=30)* |
+| ![Spillover](assets/spatial_spillover.png) | ![Residuals](assets/residual_dist.png) |
+| *Own vs. neighbour demand* | *Residual distribution* |
+
+---
+## 🛠️ Tech Stack
+
+| Layer | Technologies |
+|-------|-------------|
+| Core ML | Python, pandas, NumPy, scikit-learn |
+| Gradient boosting | LightGBM, XGBoost, CatBoost |
+| Ensemble | Ridge meta-learner, K-Fold OOF stacking |
+| Visualization | matplotlib (dark-themed spatial heatmaps) |
+| Interactive demo | Streamlit (glass-morphism CSS, profile serving) |
+| CI/CD | GitHub Actions |
+| Containerization | Docker |
+| Code quality | ruff, pre-commit hooks |
+| Build automation | GNU Make |
 
 ---
 
