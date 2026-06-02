@@ -38,6 +38,22 @@ gradient-boosted / tree models** on top of rich geohash×time features.
 
 ---
 
+## 🌍 Geospatial Analysis
+
+<div align="center">
+<img src="assets/demand_hotspot_map.png" alt="Demand hotspot map" width="60%"/>
+</div>
+
+<p align="center"><i>Demand hotspot map — brighter = higher average demand. The spatial clustering validates geohash-based features.</i></p>
+
+<div align="center">
+<img src="assets/demand_by_hour.png" alt="Demand by hour" width="90%"/>
+</div>
+
+<p align="center"><i>Spatial evolution of demand across the day — the same hotspots intensify from night to morning.</i></p>
+
+---
+
 ## 🗂️ Dataset
 
 | File | Rows × Cols | Description |
@@ -114,6 +130,22 @@ is reported only for reference.
 | Persistence baseline | ~80 |
 | Single GBM (`solution.py`) | ~90 |
 | **Stacked ensemble** (`02_stacked_ensemble.ipynb`) | **97.85** |
+
+### Feature ablation
+
+<div align="center">
+<img src="assets/ablation.png" alt="Ablation study" width="80%"/>
+</div>
+
+<p align="center"><i>Each row adds one feature group — geohash×time target encodings provide the largest single lift.</i></p>
+
+### Error analysis
+
+<div align="center">
+<img src="assets/error_by_hour.png" alt="Error by hour" width="80%"/>
+</div>
+
+<p align="center"><i>Errors peak during high-demand hours; the model slightly under-predicts demand spikes.</i></p>
 
 Validation uses a **forward holdout** (train on the reference day, predict the held-out
 next-day records) so reported numbers reflect true forecasting performance rather than an
@@ -202,7 +234,16 @@ traffic-demand-prediction/
 ```
 
 ---
+## 🗺️ More visualizations
 
+| | |
+|:---:|:---:|
+| ![Grid](assets/geospatial_grid.png) | ![Clusters](assets/geo_clusters.png) |
+| *Decoded geohash grid* | *K-means geo-clusters (k=30)* |
+| ![Spillover](assets/spatial_spillover.png) | ![Residuals](assets/residual_dist.png) |
+| *Own vs. neighbour demand* | *Residual distribution* |
+
+---
 ## 🛠️ Tech stack
 
 `Python` · `pandas` · `numpy` · `scikit-learn` · `LightGBM` · `XGBoost` · `CatBoost` · `Jupyter`
