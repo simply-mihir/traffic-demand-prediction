@@ -63,21 +63,6 @@ An interactive Streamlit app lets you explore demand predictions for any locatio
 Select a geohash, hour, road type, and weather condition to see the predicted demand, a 24-hour profile chart, a map pin, and location statistics. The app runs on precomputed aggregated profiles (no raw data is exposed).
 
 ---
-## 🌍 Geospatial Analysis
-
-<div align="center">
-<img src="assets/demand_hotspot_map.png" alt="Demand hotspot map" width="60%"/>
-</div>
-
-<p align="center"><i>Demand hotspot map — brighter regions indicate higher average demand. Spatial clustering validates geohash-based features.</i></p>
-
-<div align="center">
-<img src="assets/demand_by_hour.png" alt="Demand by hour" width="90%"/>
-</div>
-
-<p align="center"><i>Spatial evolution of demand across the day — the same hotspots intensify from night to morning peak.</i></p>
-
----
 
 ## 🗂️ Dataset
 
@@ -234,18 +219,6 @@ predictions clipped to `[0, 1]`.
 
 ---
 
-## ⚡ Quick Commands
-
-| Command | What it does |
-|---------|-------------|
-| `make train` | Run single-model pipeline → `submission.csv` |
-| `make ensemble` | Execute the stacked-ensemble notebook |
-| `make test` | CI smoke test on synthetic data |
-| `make lint` | Run ruff + mypy |
-| `python tests/validate_data.py` | Schema and quality checks on `data/*.csv` |
-| `docker build -t traffic . && docker run traffic` | Containerized smoke test |
----
-
 
 ## ⚡ Quick commands
 
@@ -300,16 +273,6 @@ traffic-demand-prediction/
 ├── assets/                         # SVG diagrams + generated PNG charts
 └── data/.gitkeep                   # local data (git-ignored)
 ```
-
----
-## 🗺️ More visualizations
-
-| | |
-|:---:|:---:|
-| ![Grid](assets/geospatial_grid.png) | ![Clusters](assets/geo_clusters.png) |
-| *Decoded geohash grid* | *K-means geo-clusters (k=30)* |
-| ![Spillover](assets/spatial_spillover.png) | ![Residuals](assets/residual_dist.png) |
-| *Own vs. neighbour demand* | *Residual distribution* |
 
 ---
 ## 🗺️ More Visualizations

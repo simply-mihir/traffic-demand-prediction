@@ -11,7 +11,8 @@ _B32 = "0123456789bcdefghjkmnpqrstuvwxyz"
 _DEC = {c: i for i, c in enumerate(_B32)}
 
 
-def gh_decode(gh):
+def gh_decode(gh: str) -> tuple:
+    """Decode a geohash6 string to (latitude, longitude) coordinates."""
     if not isinstance(gh, str) or not gh:
         return (np.nan, np.nan)
     lat, lon, is_lon = [-90.0, 90.0], [-180.0, 180.0], True
@@ -276,7 +277,20 @@ if __name__ == "__main__":
 # at the same time slot (computed from the reference day). Geohash adjacency is
 # preserved, so physically close areas share demand patterns.
 # ---------------------------------------------------------------------------
-def add_spatial_neighbour(Xtr, Xte, train, test, y, k=6):
+def add_spatial_neighbour(
+    Xtr: pd.DataFrame,
+    Xte: pd.DataFrame,
+    train: pd.DataFrame,
+    test: pd.DataFrame,
+    y: pd.Series,
+    k: int = 6,
+) -> tuple:
+    """Add spatial-neighbour demand feature using k-nearest geohash neighbours.
+
+    For each location, computes the mean demand of its k nearest neighbours
+    at the same time slot. Geohash adjacency is preserved, so physically
+    close areas share demand patterns.
+    """
     from sklearn.neighbors import NearestNeighbors
 
     def mod_of(t):

@@ -53,7 +53,12 @@ def mod_of(ts):
     return int(h) * 60 + int(m)
 
 
-def base_features(df):
+def base_features(df: pd.DataFrame) -> tuple:
+    """Extract base spatial and temporal features from raw input.
+
+    Decodes geohash to lat/lon, computes cyclical time encodings,
+    and encodes categorical context attributes.
+    """
     out = pd.DataFrame(index=df.index)
     mod = df["timestamp"].map(mod_of)
     out["mod"] = mod
@@ -116,7 +121,18 @@ def mkkey(df, cols):
     return s
 
 
-def build_design(train, test, y, folds):
+def build_design(
+    train: pd.DataFrame,
+    test: pd.DataFrame,
+    y: pd.Series,
+    folds: list,
+) -> tuple:
+    """Build the complete feature matrix with target encodings and demand profiles.
+
+    Constructs leak-free K-fold target encodings at multiple granularities,
+    a denoised reference-day demand profile, and spatial context features.
+    Train and test are processed jointly for consistent encoding.
+    """
     Xtr, mod_tr = base_features(train)
     Xte, mod_te = base_features(test)
     Xtr = Xtr.reset_index(drop=True)
