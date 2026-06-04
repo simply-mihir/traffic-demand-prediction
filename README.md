@@ -175,6 +175,12 @@ is reported only for reference.
 
 <p align="center"><i>Stacking beats every individual model — the Ridge meta-learner exploits diverse error patterns across five model families.</i></p>
 
+<div align="center">
+<img src="assets/model_correlation.png" alt="Prediction correlation" width="55%"/>
+</div>
+
+<p align="center"><i>OOF prediction correlation — lower off-diagonal values mean more diverse errors, which is what stacking exploits.</i></p>
+
 ### Error analysis
 
 <div align="center">
