@@ -136,6 +136,9 @@ profile and geohash×time demand encodings carry the signal, confirming the spat
 - **`notebooks/02_stacked_ensemble.ipynb`** — the headline model: **out-of-fold stacking**
   of **LightGBM + XGBoost + CatBoost + HistGradientBoosting + ExtraTrees**, combined by a
   **Ridge meta-learner**. Boosters use `geohash` and other categoricals **natively**.
+- **`notebooks/07_model_comparison.ipynb`** — head-to-head comparison of all five model
+  families trained independently, showing why stacking outperforms: a prediction
+  correlation matrix reveals the error diversity that the meta-learner exploits.
 
 ### 3 · Validation
 A **forward holdout** (train on the reference day, predict the held-out next-day records)
@@ -163,6 +166,14 @@ is reported only for reference.
 </div>
 
 <p align="center"><i>Each row adds one feature group — geohash×time target encodings provide the largest single lift.</i></p>
+
+### Model comparison
+
+<div align="center">
+<img src="assets/model_comparison.png" alt="Model comparison" width="80%"/>
+</div>
+
+<p align="center"><i>Stacking beats every individual model — the Ridge meta-learner exploits diverse error patterns across five model families.</i></p>
 
 ### Error analysis
 
@@ -274,6 +285,7 @@ traffic-demand-prediction/
 │   ├── 04_error_analysis.ipynb     # residual analysis by hour/road/weather
 │   ├── 05_ablation_study.ipynb     # feature-group contribution study
 │   └── 06_geospatial_visualization.ipynb  # demand heatmaps & clusters
+│   ├── 07_model_comparison.ipynb   # individual models vs stacked ensemble
 ├── tests/
 │   ├── make_synth_and_check.py     # CI smoke test
 │   └── validate_data.py            # schema & quality checks
