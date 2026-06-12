@@ -7,7 +7,7 @@ All notable iterations of this project.
   with a Ridge meta-learner over out-of-fold predictions.
 - Added **spatial-neighbour demand** feature (k-nearest geohash neighbours).
 - Added geospatial visualization notebook.
-- Accuracy: **97.85**
+- Accuracy: **97.01**
 
 ## v2.0 — Single GBM + Feature Engineering
 - Rich feature set: geohash×time target encodings, denoised day-48 profile,
