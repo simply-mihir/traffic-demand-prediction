@@ -12,6 +12,7 @@
 [![Jupyter](https://img.shields.io/badge/Jupyter-notebooks-F37626?logo=jupyter&logoColor=white)](https://jupyter.org/)
 [![CI](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/simply-mihir/traffic-demand-prediction/actions/workflows/ci.yml)
 [![Docker](https://img.shields.io/badge/Docker-ready-2496ED?logo=docker&logoColor=white)](Dockerfile)
+[![Demo](https://img.shields.io/badge/Live_Demo-HuggingFace_Spaces-FFD21E?logo=huggingface&logoColor=black)](https://simply-mihir-traffic-demand-prediction.hf.space)
 [![Demo](https://img.shields.io/badge/Live_Demo-Streamlit-FF4B4B?logo=streamlit&logoColor=white)](https://traffic-demand-prediction-simply-mihir.streamlit.app/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -54,13 +55,14 @@ gradient-boosted / tree models** on top of rich geohash×time features.
 <p align="center"><i>Spatial evolution of demand across the day — the same hotspots intensify from night to morning.</i></p>
 
 ---
-## 🌐 Live Demo
 
-An interactive Streamlit app lets you explore demand predictions for any location and time — no setup required.
+## Live Demo
 
-**[Launch the demo →](https://traffic-demand-prediction-simply-mihir.streamlit.app)**
+Explore demand predictions interactively — no setup required.
 
-Select a geohash, hour, road type, and weather condition to see the predicted demand, a 24-hour profile chart, a map pin, and location statistics. The app runs on precomputed aggregated profiles (no raw data is exposed).
+**[HuggingFace Spaces](https://simply-mihir-traffic-demand-prediction.hf.space)** | **[Streamlit Cloud](https://traffic-demand-prediction-simply-mihir.streamlit.app)**
+
+Select a geohash, hour, road type, and weather condition to see the predicted demand, a 24-hour profile chart, a map pin, and location statistics. Both apps run on precomputed aggregated profiles (no raw data is exposed).
 
 ---
 
