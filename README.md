@@ -308,5 +308,5 @@ traffic-demand-prediction/
 Released under the [MIT License](LICENSE).
 
 <div align="center">
-<sub>Built for a traffic-demand forecasting challenge · spatio-temporal ML</sub>
+<sub>Built for a traffic demand forecasting challenge · spatio-temporal ML</sub>
 </div>
