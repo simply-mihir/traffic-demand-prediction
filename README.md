@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🚦 Traffic Demand Prediction
+#  Traffic Demand Prediction
 
 ### Spatio-temporal forecasting of normalized traffic demand on a 15-minute geohash grid
 
@@ -22,7 +22,7 @@
 
 ---
 
-## 📌 Overview
+##  Overview
 
 This repository tackles a **travel-demand forecasting** problem: given a city's historical
 demand aggregated into **geohash locations** over **15-minute buckets**, predict the
@@ -40,7 +40,7 @@ gradient-boosted / tree models** on top of rich geohash×time features.
 
 ---
 
-## 🌍 Geospatial Analysis
+##  Geospatial Analysis
 
 <div align="center">
 <img src="assets/demand_hotspot_map.png" alt="Demand hotspot map" width="60%"/>
@@ -66,7 +66,7 @@ Select a geohash, hour, road type, and weather condition to see the predicted de
 
 ---
 
-## 🗂️ Dataset
+##  Dataset
 
 | File | Rows × Cols | Description |
 |------|-------------|-------------|
@@ -93,7 +93,7 @@ locations recur across train and test, and demand follows a smooth, location-spe
 
 ---
 
-## 🧠 Approach
+##  Approach
 
 ### 1 · Feature engineering (`src/feature_engineering.py`)
 Built **jointly on train + test** so every encoding is consistent.
@@ -134,7 +134,7 @@ is reported only for reference.
 
 ---
 
-## 📊 Results
+##  Results
 
 <div align="center">
 <img src="assets/results.svg" alt="Results by approach" width="90%"/>
@@ -198,7 +198,7 @@ methodology, EDA, and ablations.
 <p align="center"><i>Errors peak during high-demand hours; the model slightly under-predicts demand spikes.</i></p>
 ---
 
-## 🚀 Quickstart
+##  Quickstart
 
 ```bash
 # 1. clone & install
@@ -222,7 +222,7 @@ predictions clipped to `[0, 1]`.
 ---
 
 
-## ⚡ Quick commands
+##  Quick commands
 
 | Command | What it does |
 |---------|-------------|
@@ -236,7 +236,7 @@ predictions clipped to `[0, 1]`.
 ---
 
 
-## 📁 Repository structure
+##  Repository structure
 
 ```
 traffic-demand-prediction/
@@ -277,7 +277,7 @@ traffic-demand-prediction/
 ```
 
 ---
-## 🗺️ More Visualizations
+##  More Visualizations
 
 | | |
 |:---:|:---:|
@@ -287,7 +287,7 @@ traffic-demand-prediction/
 | *Own vs. neighbour demand* | *Residual distribution* |
 
 ---
-## 🛠️ Tech Stack
+##  Tech Stack
 
 | Layer | Technologies |
 |-------|-------------|
@@ -303,7 +303,7 @@ traffic-demand-prediction/
 
 ---
 
-## 📄 License
+##  License
 
 Released under the [MIT License](LICENSE).
 
