@@ -8,7 +8,7 @@ Predicting normalized traffic demand across a city's road network, aggregated in
 
 ## What Makes This Hard
 
-This is not a standard tabular regression problem — it is a **spatio-temporal time-series forecasting** task disguised as one. The rows are not independent: they form a continuous timeline across a fixed set of recurring locations. The test set is the immediate temporal continuation of the training set (day 49 daytime, following a training window of day 48 + day 49 early morning). This means that the dominant signal is each location's **time-of-day demand profile**, not the supplied context attributes (road type, weather, temperature), which carry comparatively little predictive power. Recognizing this structure — and building the solution around it rather than treating rows as i.i.d. — is the key insight that separates a baseline score of ~50 from a competitive score of ~98.
+This is not a standard tabular regression problem — it is a **spatio-temporal time-series forecasting** task disguised as one. The rows are not independent: they form a continuous timeline across a fixed set of recurring locations. The test set is the immediate temporal continuation of the training set (day 49 daytime, following a training window of day 48 + day 49 early morning). This means that the dominant signal is each location's **time-of-day demand profile**, not the supplied context attributes (road type, weather, temperature), which carry comparatively little predictive power. Recognizing this structure — and building the solution around it rather than treating rows as i.i.d. — is the key insight that separates a baseline score of ~50 from a competitive score of ~97.
 
 ---
 
@@ -173,4 +173,4 @@ traffic-demand-prediction/
 |----------|:--------:|
 | Persistence baseline (copy reference day) | ~80 |
 | Single GBM (LightGBM, 3×5 bagged) | ~90 |
-| **Stacked ensemble (LightGBM + XGBoost + CatBoost + HGBR + ExtraTrees + Ridge)** | **97.85** |
+| **Stacked ensemble (LightGBM + XGBoost + CatBoost + HGBR + ExtraTrees + Ridge)** | **~97** |
